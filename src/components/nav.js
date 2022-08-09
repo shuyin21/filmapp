@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import styled, { keyframes, css } from 'styled-components'
 
 
 
@@ -7,8 +7,19 @@ import styled from 'styled-components'
 const Nav = () => {
 
     const [scrolled, setScrolled] = useState(false)
+    const [clicked, setClicked] = useState(false)
+    const [open, setOpen] = useState(null);
 
 
+    const clickHandler = () => {
+        // if (clicked == 1) {
+        //     setClicked(0)
+        // } else {
+        //     setClicked(1)
+        // }
+        console.log(clicked);
+        setClicked(!clicked)
+    }
 
     return (
         <MainDiv>
@@ -25,10 +36,11 @@ const Nav = () => {
                     <CButton>Contact</CButton>
                 </ContactWrapper>
 
-                <Burger>
-                    <div></div>
-                    <div></div>
-                </Burger>
+                <StyledBurger onClick={() => setOpen(prev => !prev)} open={open}>
+                    <div />
+                    <div />
+                    <div />
+                </StyledBurger>
             </Right>
 
         </MainDiv>
@@ -107,17 +119,82 @@ text-transform:uppercase;
 }
 `;
 
-const Burger = styled.div`
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-cursor:pointer;
-div{
-    width:25px;
-    height:2px;
-    background: #fff;
-    margin:4px;
+const StyledBurger = styled.button`
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border: 0;
+  background-color: transparent;
+  border-radius: 2.7px;
+  cursor: pointer;
+  height: 30px;
+  div {
+    width: 27px;
+    height: 3px;
+    margin: 1.5px;
+    transition: all 0.2s linear;
+    border-radius: 1.4px;
+    background-color: white;
+    :first-child {
+      ${({ open }) =>
+        open !== null && (open ? firstOpenAnimation : firstCloseAnimation)}
+    }
+    :nth-child(2) {
+      opacity: ${({ open }) => (open ? "0" : "1")};
+    }
+    :nth-child(3) {
+      ${({ open }) =>
+        open !== null && (open ? seconOpenAnimation : secondCloseAnimation)}
+    }
+  }
+`;
 
-}
+const firstOpenKeyframe = keyframes`
+  50% {
+    transform: translateY(6px) rotate(0);
+  }
+  100% {
+    transform: translateY(6px) rotate(45deg);
+  }
+`;
+
+const secondOpenKeyframe = keyframes`
+  50% {
+    transform: translateY(-6px) rotate(0);
+  }
+  100% {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+`;
+
+const firstCloseKeyFrame = keyframes`
+  50% {
+    transform:translateY(0) rotate(-45deg);
+  }
+  100% {
+    transform:translateY(0) rotate(0)  ;
+  }
+`;
+const secondCloseKeyFrame = keyframes`
+  50% {
+    transform:translateY(0) rotate(-45deg);
+  }
+  100% {
+    transform:translateY(0) rotate(0)  ;
+  }
+`;
+
+const firstOpenAnimation = css`
+  animation: 0.3s linear ${firstOpenKeyframe} forwards;
+`;
+
+const seconOpenAnimation = css`
+  animation: 0.3s linear ${secondOpenKeyframe} forwards;
+`;
+const secondCloseAnimation = css`
+  animation: 0.3s linear ${secondCloseKeyFrame} forwards;
+`;
+
+const firstCloseAnimation = css`
+  animation: 0.3s linear ${firstCloseKeyFrame} forwards;
 `;
